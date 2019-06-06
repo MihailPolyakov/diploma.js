@@ -92,6 +92,13 @@ class Level{
 		for (var i = 0; i < array.length; i++) {
 			countAllWidth.push(array[i].length);
 		}
+
+		for (let value of this.actors){
+			if (value.type == 'player') {
+				var player = value;
+			}
+		}
+		this.player = player;
 		this.width = Math.max.apply(null, countAllWidth);
 		this.status = null;
 		this.finishDelay = 1;
@@ -124,12 +131,30 @@ class Level{
 			} else if(objectVector_1.x < 0 || objectVector_2.x < 0 || objectVector_1.x > this.width || objectVector_2.x > this.width || objectVector_1.y > this.height || objectVector_2.y > this.height){
 				return 'wall';
 			} else {
-				
+
 			}
 		} else {
 			throw new Error("Аргументы должны быть объектом класса Vector");
 		}
 	}
+
+	removeActor(objectActor = NULL){
+		if (objectActor != NULL) {
+			delete this.actor[find(this.actor, objectActor)];
+		}
+	}
+
+	noMoreActors(typeObject){
+		return function (typeObject){
+			for (let value of this.actor){
+				if (this.actor.type == typeObject) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 }
 
 const grid = [
