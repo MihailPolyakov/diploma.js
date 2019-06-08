@@ -84,28 +84,35 @@ class Actor{
 }
 
 class Level{
-	constructor(array = NULL, object = NULL){
+	constructor(array = [], object = [new Actor()]){
 		this.grid = array;
 		this.actors = object;
 		this.height = array.length;
-		let countAllWidth = [];
-		for (var i = 0; i < array.length; i++) {
-			countAllWidth.push(array[i].length);
+		
+		if (array.length == 0) {
+			this.width = 0;
+		} else {
+			let countAllWidth = [];
+			for (var i = 0; i < array.length; i++) {
+				if (typeof(array[i]) == 'object') {
+					countAllWidth.push(array[i].length);
+				}
+			}
+			this.width = Math.max.apply(null, countAllWidth);
 		}
 
-		for (let value of this.actors){
+		for (let value of this.actors) {
 			if (value.type == 'player') {
 				var player = value;
 			}
 		}
 		this.player = player;
-		this.width = Math.max.apply(null, countAllWidth);
 		this.status = null;
 		this.finishDelay = 1;
 	}
 
 	isFinished(){
-		if (this.status != null && this.finishDelay < 0) {
+		if (this.status != undefined && this.finishDelay < 0) {
 			return true;
 		} else {
 			return false;
@@ -114,11 +121,12 @@ class Level{
 
 	actorAt(actor){
 		if (actor instanceof Actor) {
-			if(this.grid[actor.left][actor.top] == undefined){
-				return undefined;
-			} else {
-				return this.grid[actor.left][actor.top];
+			for (let actorObject of this.actors){
+				if (actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
+					return actorObject;
+				}
 			}
+			return undefined;
 		} else{
 			throw new Error("Не является объектом класса Actor");
 		}
@@ -138,9 +146,9 @@ class Level{
 		}
 	}
 
-	removeActor(objectActor = NULL){
-		if (objectActor != NULL) {
-			delete this.actor[find(this.actor, objectActor)];
+	removeActor(objectActor = null){
+		if (objectActor != undefined) {
+			delete this.actor[this.actor.indexOf(objectActor)];
 		}
 	}
 
@@ -155,6 +163,22 @@ class Level{
 		}
 	}
 
+	playerTouched (type, objectActor = null){
+		if (this.status == undefined) {
+			if (type == 'lava' || type == 'fireball') {
+				this.status = lost;
+			} else if(type == 'coin' && objectActor.type == 'coin') {
+				delete this.actors[this.actors.indexOf(objectActor)];
+				let coin = 0;
+				for (let value of this.actors){
+					if (this.actors.type == 'coin') {
+						coin = 'coin';
+					}
+				}
+				if (!coin) {this.status = 'won'};
+			}
+		}
+	}
 }
 
 const grid = [
