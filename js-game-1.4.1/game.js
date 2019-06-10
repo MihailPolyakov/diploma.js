@@ -69,18 +69,15 @@ class Actor{
 	}
 
 	act(){}
-
-	isIntersect(actor){
-		if (actor instanceof Actor && actor != undefined) {
-			if (actor == this || this.pos != actor.pos && this.size != actor.size) {
-				return false;
-			} else {
-				return true;
-			}
-		} else{
-			throw new Error("Можно прибавлять к вектору только вектор типа Vector");
+	isIntersect(otherActor) {
+		if (!(otherActor instanceof Actor)) {
+			throw new Error('Ошибка: Должен быть передан объект типа Actor.');
 		}
-	}				
+		if (otherActor === this) {
+			return false;
+		}
+		return this.right > otherActor.left && this.left < otherActor.right && this.top < otherActor.bottom && this.bottom > otherActor.top
+	}
 }
 
 class Level{
@@ -100,6 +97,7 @@ class Level{
 			}
 			this.width = Math.max.apply(null, countAllWidth);
 		}
+
 
 		for (let value of this.actors) {
 			if (value.type == 'player') {
