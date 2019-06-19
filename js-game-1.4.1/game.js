@@ -82,6 +82,15 @@ class Actor{
 
 class Level{
 	constructor(array = [], object = [new Actor()]){
+		class Player extends Actor {
+			constructor(pos = new Vector(0, 0)) {
+				super(pos.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5));
+			}
+			get type() {
+				return 'player';
+			}
+		}
+		object.push(new Player);
 		this.grid = array;
 		this.actors = object;
 		this.height = array.length;
@@ -98,13 +107,7 @@ class Level{
 			this.width = Math.max.apply(null, countAllWidth);
 		}
 
-
-		for (let value of this.actors) {
-			if (value.type == 'player') {
-				var player = value;
-			}
-		}
-		this.player = player;
+		this.player = new Player;
 		this.status = null;
 		this.finishDelay = 1;
 	}
