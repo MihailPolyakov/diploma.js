@@ -28,7 +28,7 @@ class Actor{
 			this.pos = pos;
 			this.size = size;
 			this.speed = speed;
-	        Object.defineProperty (this, "left", {
+	       /* Object.defineProperty (this, "left", {
 	          get: function() {
 	            return this.pos.x;
 	          },
@@ -61,12 +61,31 @@ class Actor{
 	            return "actor";
 	          },
 	          configurable: false
-	        });
+	        });*/
 
 		} else{
 			throw new Error("Параметр должен быть объектом класса Vector");
 		}
 	}
+  get left(){
+    return this.pos.x;
+  }
+
+  get top(){
+    return this.pos.y;
+  }
+
+  get right(){
+    return this.size.x + this.pos.x;
+  }
+
+  get bottom() {
+    return this.size.y + this.pos.y;
+  }
+
+  get type(){
+    return "actor";
+  }
 
 	act(){}
 	isIntersect(otherActor) {
@@ -82,6 +101,7 @@ class Actor{
 
 class Level{
 	constructor(array = [], object = [new Actor()]){
+    
 		class Player extends Actor {
 			constructor(pos = new Vector(0, 0)) {
 				super(pos.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5));
@@ -119,10 +139,15 @@ class Level{
 			return false;
 		}
 	}
-
+  
 	actorAt(actor){
+    
 		if (actor instanceof Actor) {
+      
 			for (let actorObject of this.actors){
+        if(actorObject.type == 'coin'){
+          continue;
+        }
 				if (actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
 					return actorObject;
 				}
@@ -135,12 +160,13 @@ class Level{
 
 	obstacleAt(objectVector_1, objectVector_2){
 		if (objectVector_1 instanceof Vector && objectVector_2 instanceof Vector) {
+      console.log(objectVector_2);
 			if ( objectVector_1.y < 0 || objectVector_2.y < 0) {
 				return 'lava';
 			} else if(objectVector_1.x < 0 || objectVector_2.x < 0 || objectVector_1.x > this.width || objectVector_2.x > this.width || objectVector_1.y > this.height || objectVector_2.y > this.height){
 				return 'wall';
 			} else {
-
+        return undefined;
 			}
 		} else {
 			throw new Error("Аргументы должны быть объектом класса Vector");
@@ -169,7 +195,7 @@ class Level{
 			if (type == 'lava' || type == 'fireball') {
 				this.status = lost;
 			} else if(type == 'coin' && objectActor.type == 'coin') {
-				delete this.actors[this.actors.indexOf(objectActor)];
+				this.actors.splice(this.actors.indexOf(objectActor),1);
 				let coin = 0;
 				for (let value of this.actors){
 					if (this.actors.type == 'coin') {
@@ -195,6 +221,7 @@ MyCoin.prototype = Object.create(Actor);
 MyCoin.constructor = MyCoin;
 
 const goldCoin = new MyCoin('Золото');
+
 const bronzeCoin = new MyCoin('Бронза');
 const player = new Actor();
 const fireball = new Actor();
@@ -202,7 +229,7 @@ const fireball = new Actor();
 const level = new Level(grid, [ goldCoin, bronzeCoin, player, fireball ]);
 
 level.playerTouched('coin', goldCoin);
-level.playerTouched('coin', bronzeCoin);
+//level.playerTouched('coin', bronzeCoin);
 
 if (level.noMoreActors('coin')) {
   console.log('Все монеты собраны');
