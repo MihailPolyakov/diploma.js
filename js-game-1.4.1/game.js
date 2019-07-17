@@ -122,7 +122,7 @@ class Level{
 		if (objectVector_1 instanceof Vector && objectVector_2 instanceof Vector) {
 			if ( objectVector_1.y < 0 || objectVector_2.y < 0) {
 				return 'lava';
-			} else if(objectVector_1.x < 0 || objectVector_2.x < 0 || objectVector_1.x > this.width || objectVector_2.x > this.width || objectVector_1.y > this.height || objectVector_2.y > this.height){
+			} else if(objectVector_1.x < 0 || objectVector_2.x < 0 || objectVector_1.x > this.width || objectVector_2.x > this.width || objectVector_1.y > this.height && objectVector_2.y > this.height){
 				return 'wall';
 			} else {
         return this.grid[objectVector_1.x][objectVector_1.y];
@@ -134,7 +134,7 @@ class Level{
 
 	removeActor(objectActor = null){
 		if (objectActor != undefined) {
-			delete this.actor[this.actor.indexOf(objectActor)];
+			this.actors.splice(this.actors.indexOf(objectActor), 1);
 		}
 	}
 
@@ -150,8 +150,8 @@ class Level{
 	playerTouched (type, objectActor = null){
 		if (this.status == undefined) {
 			if (type == 'lava' || type == 'fireball') {
-				this.status = lost;
-			} else if(type == 'coin' && objectActor.type == 'coin') {
+				this.status = 'lost';
+			} else if(type == 'coin') {
 				this.actors.splice(this.actors.indexOf(objectActor),1);
 				let coin = 0;
 				for (let value of this.actors){
