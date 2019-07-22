@@ -106,7 +106,7 @@ class Level{
 		        if(actorObject.type == 'coin'){
 		          continue;
 		        }
-		        //alert(actorObject);
+		        
 				if (this.actors.length > 1 && actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
 					return actorObject;
 				}
