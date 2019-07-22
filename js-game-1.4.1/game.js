@@ -28,41 +28,6 @@ class Actor{
 			this.pos = pos;
 			this.size = size;
 			this.speed = speed;
-	       /* Object.defineProperty (this, "left", {
-	          get: function() {
-	            return this.pos.x;
-	          },
-	          configurable: false
-	        });
-
-	        Object.defineProperty (this, "top", {
-	          get: function() {
-	            return this.pos.y;
-	          },
-	          configurable: false
-	        });	
-
-	        Object.defineProperty (this, "right", {
-	          get: function() {
-	            return this.size.x + this.pos.x;
-	          },
-	          configurable: false
-	        });	
-
-	        Object.defineProperty (this, "bottom", {
-	          get: function() {
-	            return this.size.y + this.pos.y;
-	          },
-	          configurable: false
-	        });
-
-	        Object.defineProperty (this, "type", {
-	          get: function() {
-	            return "actor";
-	          },
-	          configurable: false
-	        });*/
-
 		} else{
 			throw new Error("Параметр должен быть объектом класса Vector");
 		}
@@ -101,16 +66,6 @@ class Actor{
 
 class Level{
 	constructor(array = [], object = [new Actor()]){
-    
-		class Player extends Actor {
-			constructor(pos = new Vector(0, 0)) {
-				super(pos.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5));
-			}
-			get type() {
-				return 'player';
-			}
-		}
-		object.push(new Player);
 		this.grid = array;
 		this.actors = object;
 		this.height = array.length;
@@ -126,11 +81,16 @@ class Level{
 			}
 			this.width = Math.max.apply(null, countAllWidth);
 		}
-
-		this.player = new Player;
 		this.status = null;
 		this.finishDelay = 1;
 	}
+	get player(){
+		for (var i = 0; i < this.actors.length; i++) {
+			if (this.actors[i].type == 'player') {
+				return this.actors[i];
+			}
+		}
+    }
 
 	isFinished(){
 		if (this.status != undefined && this.finishDelay < 0) {
@@ -141,16 +101,17 @@ class Level{
 	}
   
 	actorAt(actor){    
-		if (actor instanceof Actor) {
-			for (let actorObject of this.actors){
+		if (actor instanceof Actor || typeof(actor) != 'undefined') {
+			for (var actorObject of this.actors){
 		        if(actorObject.type == 'coin'){
 		          continue;
 		        }
-		        console.log(actorObject);
+		        //alert(actorObject);
 				if (actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
 					return actorObject;
 				}
 			}
+			alert('undefined');
 			return undefined;
 		} else{
 			throw new Error("Не является объектом класса Actor");
