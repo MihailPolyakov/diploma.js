@@ -65,8 +65,7 @@ class Actor{
 }
 
 class Level{
- 	constructor(array = [], object = [new Actor()]){
-    
+	constructor(array = [], object = [new Actor()]){
 		this.grid = array;
 		this.actors = object;
 		this.height = array.length;
@@ -82,16 +81,16 @@ class Level{
 			}
 			this.width = Math.max.apply(null, countAllWidth);
 		}
-    let newPlayer = this.actors[this.actors.indexOf(player)];
-    Object.defineProperty(newPlayer, 'type',{
-      get: function(){
-        return 'player';
-      }
-    })
-		this.player = newPlayer;
 		this.status = null;
 		this.finishDelay = 1;
 	}
+	get player(){
+		for (var i = 0; i < this.actors.length; i++) {
+			if (this.actors[i].type == 'player') {
+				return this.actors[i];
+			}
+		}
+    }
 
 	isFinished(){
 		if (this.status != undefined && this.finishDelay < 0) {
@@ -102,13 +101,13 @@ class Level{
 	}
   
 	actorAt(actor){    
-		if (actor instanceof Actor) {
-			for (let actorObject of this.actors){
+		if (actor instanceof Actor || typeof(actor) != 'undefined' && this.actors.indexOf(actor) != -1) {
+			for (var actorObject of this.actors){
 		        if(actorObject.type == 'coin'){
 		          continue;
 		        }
-		        console.log(actorObject);
-				if (actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
+		        //alert(actorObject);
+				if (this.actors.length > 1 && actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
 					return actorObject;
 				}
 			}
@@ -164,6 +163,7 @@ class Level{
 		}
 	}
 }
+
 
 const grid = [
   [undefined, undefined],
