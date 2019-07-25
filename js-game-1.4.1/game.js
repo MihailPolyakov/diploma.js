@@ -101,13 +101,13 @@ class Level{
 	}
   
 	actorAt(actor){    
-		if (actor instanceof Actor || typeof(actor) != 'undefined' && this.actors.indexOf(actor) != -1) {
+		if (actor instanceof Actor || typeof(actor) != 'undefined' || this.actors.indexOf(actor) != -1) {
 			for (var actorObject of this.actors){
 		        if(actorObject.type == 'coin'){
 		          continue;
 		        }
 		        
-				if (this.actors.length > 1 && actorObject.pos.x == actor.pos.x && actorObject.pos.y == actor.pos.y) {
+				if (actor.isIntersect(actorObject) && this.actors.length > 1) {
 					return actorObject;
 				}
 			}
@@ -119,9 +119,9 @@ class Level{
 
 	obstacleAt(objectVector_1, objectVector_2){
 		if (objectVector_1 instanceof Vector && objectVector_2 instanceof Vector) {
-			if ( objectVector_1.y < 0 || objectVector_2.y < 0) {
+			if ( objectVector_1.y + objectVector_2.y > this.height) {
 				return 'lava';
-			} else if(objectVector_1.x < 0 || objectVector_2.x < 0 || objectVector_1.x > this.width || objectVector_2.x > this.width || objectVector_1.y > this.height && objectVector_2.y > this.height){
+			} else if(objectVector_1.x + objectVector_2.x > this.width || objectVector_1.x < 0 || objectVector_1.y < 0){
 				return 'wall';
 			} else {
         return this.grid[objectVector_1.x][objectVector_1.y];
