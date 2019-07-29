@@ -123,8 +123,10 @@ class Level{
 				return 'lava';
 			} else if(objectVector_1.x + objectVector_2.x > this.width || objectVector_1.x < 0 || objectVector_1.y < 0){
 				return 'wall';
+			/*} else if(this.grid[Math.ceil(objectVector_1.x)][Math.floor(objectVector_1.y)] == 'wall' && this.grid[Math.ceil(objectVector_1.x) + Math.ceil(objectVector_2.x)][Math.ceil(objectVector_1.y) + Math.ceil(objectVector_2.y)] == 'wall'){
+        		return 'undefined';   */     		
 			} else {
-        return this.grid[objectVector_1.x][objectVector_1.y];
+				return this.grid[Math.ceil(objectVector_1.x)][Math.floor(objectVector_1.y)];
 			}
 		} else {
 			throw new Error("Аргументы должны быть объектом класса Vector");
